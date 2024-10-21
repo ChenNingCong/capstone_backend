@@ -15,6 +15,9 @@ def get_session():
     with Session(engine) as session:
         yield session
 
+def get_engine():
+    return engine
+
 def create_test_user():
     import db.auth
     from db.auth import get_password_hash, User

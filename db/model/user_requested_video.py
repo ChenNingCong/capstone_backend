@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel, Session
+from sqlmodel import Field, SQLModel, Session, select
 from typing import Optional
 import datetime
 
@@ -51,3 +51,21 @@ def make_new_request(
         return request
     else:
         return None
+
+def update_field(session, model, id, field_name, new_value):
+    # Query the record by id
+    statement = select(model).where(model.id == id)
+    result = session.exec(statement).first()
+    
+    if result:
+        # Update the field
+        setattr(result, field_name, new_value)
+        session.add(result)
+        session.commit()
+        session.refresh(result)
+        return result
+    else:
+        return None
+
+def update_status(session, id):
+    return update_field(session, UserRequestedVideo, id, "finished", True)
