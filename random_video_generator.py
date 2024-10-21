@@ -4,6 +4,13 @@ import moviepy.editor as mpy
 import os
 from pathlib import Path
 class RandomVideoGenerator(AbstractVideoGenerator):
+    def default_kwargs(self, **kwargs):
+        height = kwargs.get("height", 128)
+        width = kwargs.get("width", 128)
+        fps = kwargs.get("fps", 30)
+        duration = kwargs.get("duration", 5)
+        return kwargs
+    
     def generate(self, seed : int, **kwargs) -> str:
         root_path = Path(os.path.join("video_asset", "random"))
         root_path.mkdir(parents=True, exist_ok=True)
@@ -11,10 +18,6 @@ class RandomVideoGenerator(AbstractVideoGenerator):
         if os.path.exists(path):
             return path
         # Create a function to generate a random frame
-        height = kwargs.get("height", 128)
-        width = kwargs.get("width", 128)
-        fps = kwargs.get("fps", 30)
-        duration = kwargs.get("duration", 5)
         # set random seed
         np.random.seed(seed)
         def make_frame(t):

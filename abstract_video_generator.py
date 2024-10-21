@@ -6,6 +6,9 @@ class AbstractVideoGenerator(ABC):
     @abstractmethod
     def generate(self, seed : int, **kwargs) -> str:
         pass
+    @abstractmethod
+    def default_kwargs(self, **kwargs):
+        pass
 
 class VideoGeneratorRouter:
     def __init__(self) -> None:
@@ -13,5 +16,6 @@ class VideoGeneratorRouter:
     def register(self, typ : str, generator : AbstractVideoGenerator):
         self.routers[typ] = generator
     def generate(self, typ : str, seed : int, **kwargs) -> str:
-        kwargs = {k: v for k, v in kwargs.items() if v is not None}
         return self.routers[typ].generate(seed, **kwargs)
+    def default_kwargs(self, typ : str, **kwargs):
+        return self.routers[typ].default_kwargs(**kwargs)
